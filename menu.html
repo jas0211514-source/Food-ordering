@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spice & Sapore | Menu</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="menu.css">
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">🍝 Spice & Sapore</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="menu.html">Menu</a></li>
+        <li class="nav-item"><a class="nav-link" href="cart.html">Cart 🛒 (<span id="cart-count">0</span>)</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<section class="menu-banner" style="background-image: url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092');">
+  <div class="text-center">
+    <h1>Delicious Flavors, Delivered Fast 🍕</h1>
+  </div>
+</section>
+
+
+<div class="container text-center my-4">
+  <button class="filter-btn active" data-category="all">All</button>
+  <button class="filter-btn" data-category="pizza">Pizza</button>
+  <button class="filter-btn" data-category="burger">Burgers</button>
+  <button class="filter-btn" data-category="drinks">Drinks</button>
+  <button class="filter-btn" data-category="dessert">Desserts</button>
+  <button class="filter-btn" data-category="fusion">Fusion</button>
+</div>
+
+
+<div class="container">
+  <div class="row g-4" id="dish-container">
+
+  </div>
+</div>
+
+
+<div id="miniCart" class="mini-cart">
+  <h4>🛒 Your Cart</h4>
+  <div id="miniCartItems"></div>
+  <hr>
+  <h5>Total: ₹<span id="miniCartTotal">0</span></h5>
+  <div class="mini-cart-buttons">
+    <button onclick="goToCart()" class="btn btn-sm btn-dark w-100 mt-2">Go To Cart →</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let dishes = [
+ { name: "Paneer Tikka Pizza", price: 299, category:"pizza", image: "https://tse3.mm.bing.net/th/id/OIP.oZMlp-fkQyZjgNDiM8wWJAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Butter Chicken Pasta", price: 349, category:"fusion", image: "https://kitchenjs.com/wp-content/uploads/2025/05/butter-chicken-pasta3.webp" },
+ { name: "Margherita Masala Pizza", price: 259, category:"pizza", image: "https://images.prismic.io/eataly-us/ed3fcec7-7994-426d-a5e4-a24be5a95afd_pizza-recipe-main.jpg?auto=compress" },
+ { name: "Palak Paneer Ravioli", price: 289, category:"fusion", image: "https://images.slurrp.com/prod/recipe_images/better-butter/wheat-ravioli-with-malai-palak-paneer_ELGA7TGGVODA92G6QKDZ.webp" },
+ { name: "Tandoori Mushroom Pasta", price: 269, category:"fusion", image: "https://imperialtandoor.com/cdn/shop/products/75b0b9bf-5a06-49e6-a818-4ec22c125645_1200x1200.jpg?v=1656894678" },
+ { name: "Chicken Tikka Alfredo", price: 329, category:"fusion", image: "https://cdn.theflourishingabode.com/wp-content/uploads/2025/02/Chicken-Tikka-Alfredo-served-on-a-white-plate-with-smoky-crispy-chicken-and-fresh-cilantro-9731096.png" },
+ { name: "Masala Corn Carbonara", price: 269, category:"fusion", image: "https://tse2.mm.bing.net/th/id/OIP.up2gmrVPNQlBKn5uSKC1awHaJQ?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Kadai Veg Pizza", price: 299, category:"pizza", image: "https://i.ytimg.com/vi/23Mar34D5H4/maxresdefault.jpg" },
+ { name: "Achari Chicken Pizza", price: 339, category:"pizza", image: "https://tse4.mm.bing.net/th/id/OIP.2c47NBhAPOul3WxxImn7FAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Makhani Pasta Bowl", price: 309, category:"fusion", image: "https://img.freepik.com/premium-photo/dhaba-style-sev-bhaji-sabzi-curry-made-tomato-curry-with-gathiya-ganthia-shev-served-bowl-karahi-selective-focus_466689-37790.jpg" },
+ { name: "Chole Stuffed Calzone", price: 289, category:"fusion", image: "https://www.thescramble.com/wp-content/uploads/2020/05/Spinach-and-Mushroom-Calzones.jpeg" },
+ { name: "Malai Kofta Lasagna", price: 319, category:"fusion", image: "https://www.cookingcarnival.com/wp-content/uploads/2015/03/Malai-Kofta-1024x1536.jpg" },
+ { name: "Peri Peri Paneer Pizza", price: 289, category:"pizza", image: "https://tse4.mm.bing.net/th/id/OIP.1ofk5jr1fixa_aPTSEwSOAHaJQ?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Hyderabadi Chicken Pasta", price: 359, category:"fusion", image: "https://image.shutterstock.com/image-photo/pasta-rosemary-rabbit-stew-on-260nw-1388760230.jpg" },
+ { name: "Cheese Ravioli", price: 279, category:"fusion", image: "https://cheeseknees.com/wp-content/uploads/2021/12/Cheese-Ravioli-04-768x1152.jpg" },
+ { name: "Butter Paneer Calzone", price: 299, category:"fusion", image: "https://tse1.mm.bing.net/th/id/OIP.IXVY4zflzPikxdW7wjBeBgHaE7?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Garlic Naan Pizza", price: 279, category:"pizza", image: "https://tse4.mm.bing.net/th/id/OIP.AgPmkJG2FjiE596aK-R5DAHaJ4?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Spicy Schezwan Pasta", price: 259, category:"fusion", image: "https://cookpad.com/in/recipe/images/b732773e948aef16?image_region_id=57" },
+ { name: "Mutton Keema Lasagna", price: 379, category:"fusion", image: "https://tse1.mm.bing.net/th/id/OIP.8wVlU0rGTHXrY1rcOIMKYAHaEz?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Desi White Sauce Pasta", price: 259, category:"fusion", image: "https://tse2.mm.bing.net/th/id/OIP.VSmLvVy9HMOQCNMF4RbJOAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Tandoori Veg Supreme Pizza", price: 319, category:"pizza", image: "https://tse2.mm.bing.net/th/id/OIP.U6V_3n9dhSexWrkXDfloywHaFI?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Masala Pesto Paneer Pasta", price: 279, category:"fusion", image: "https://tse1.mm.bing.net/th/id/OIP.qKqlel4sQVy6cdc0fYH4AgHaLI?w=1362&h=2048&rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Chicken Chettinad Pizza", price: 349, category:"pizza", image: "https://tse4.mm.bing.net/th/id/OIP.woLMPaaUSmO34ZF3QbA11gHaFj?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Veg Korma Lasagna", price: 329, category:"fusion", image: "https://tse3.mm.bing.net/th/id/OIP.Tdkw7UgXtRm-M1rxDhW1LQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Paneer Bhurji Stromboli", price: 299, category:"fusion", image: "https://www.cubesnjuliennes.com/wp-content/uploads/2021/03/Paneer-Bhurji.jpg" },
+ { name: "Spicy Tikka Mac & Cheese", price: 289, category:"fusion", image: "https://i0.wp.com/box2254.temp.domains/~scottjc0/wp-content/uploads/2021/06/2021-03-15-020505969.jpg?w=1100" },
+ { name: "Makhani Mushroom Pasta", price: 269, category:"fusion", image: "https://mytastycurry.com/wp-content/uploads/2024/11/Mushroom-Sauce-Pasta-Recipe.jpg" },
+ { name: "Tandoori Chicken Calzone", price: 339, category:"fusion", image: "https://tse4.mm.bing.net/th/id/OIP.a1gXbWgVd0Pc0C0D3PsYmAHaE7?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Desi Arrabiata Pasta", price: 269, category:"fusion", image: "https://www.kuchpakrahahai.in/wp-content/uploads/2015/07/Pasta-Arrabiata-Recipe.jpg" },
+ { name: "Paneer Peri Peri Lasagna", price: 319, category:"fusion", image: "https://img-global.cpcdn.com/recipes/bdddc5c632f27fc9/1200x630cq70/photo.jpg" },
+ { name: "Butter Chicken Pizza", price: 349, category:"pizza", image: "https://tse3.mm.bing.net/th/id/OIP.hFXQz-rMbzUdX5KLlQxi7wHaG4?w=600&h=557&rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Masala Alfredo Ravioli", price: 289, category:"fusion", image: "https://www.foodwerk-blog.de/wp-content/uploads/2025/02/IMG_0661.jpg" },
+ { name: "Chilli Paneer Bruschetta", price: 249, category:"fusion", image: "https://www.zaykakatadka.com/wp-content/uploads/2022/05/CERTIFICATE-OF-APPRECIATION-41.png" },
+ { name: "Tandoori Corn Pizza", price: 279, category:"pizza", image: "https://tse2.mm.bing.net/th/id/OIP.JEWutU_22DKMD9g0RF4QlwHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Achari Mushroom Pasta", price: 269, category:"fusion", image: "https://th.bing.com/th/id/R.044bf78788dafd6e8da12054b6de42c3?rik=rkS%2b1tuBlTQOwQ&riu=http%3a%2f%2fwww.flavorquotient.com%2fwp-content%2fuploads%2f2015%2f08%2fTangy-Mushroom-4-1-of-1.jpg&ehk=174hisuXUREkflMw2YAvD8R52JTEJDO2tm%2fQRfTmgg%3d&risl=&pid=ImgRaw&r=0" },
+ { name: "Spicy Makhani Spaghetti", price: 299, category:"fusion", image: "https://tse1.mm.bing.net/th/id/OIP.PDyt65kirdlbCuOBWhhVbwHaKM?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Keema Stuffed Calzone", price: 369, category:"fusion", image: "https://tse2.mm.bing.net/th/id/OIP.1WaNdmH3dXg6xBvTJs_DkAHaE7?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Palak Corn Pizza", price: 289, category:"pizza", image: "https://tse3.mm.bing.net/th/id/OIP.pFXN9tilzei9VrMp9R8ZmAHaE7?rs=1&pid=ImgDetMain&o=7&rm=3" },
+ { name: "Fusion Five Cheese Tikka Pizza", price: 359, category:"fusion", image: "https://sukhis.com/app/uploads/2025/07/CTM-Pizza-Bake_.jpg" },
+ { name: "Indian Herb Pesto Pasta", price: 279, category:"fusion", image: "https://th.bing.com/th/id/OIP.vV4mkP4YfAAeMJWxAqXJpQHaJQ?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" }
+];
+
+
+function renderDishes(category="all"){
+  const container = document.getElementById("dish-container");
+  container.innerHTML="";
+  let filtered = (category==="all") ? dishes : dishes.filter(d=>d.category===category);
+  filtered.forEach((dish,index)=>{
+    const col = document.createElement("div");
+    col.className="col-md-3 menu-item";
+    col.innerHTML = `
+      <div class="menu-card">
+        <img src="${dish.image}" alt="${dish.name}">
+        <h5>${dish.name}</h5>
+        <p>₹${dish.price}</p>
+        <button class="add-btn" onclick="addToCart(${index})">Add to Cart</button>
+      </div>
+    `;
+    container.appendChild(col);
+  });
+}
+
+function addToCart(index){
+  let dish = dishes[index];
+  let existing = cart.find(item=>item.name===dish.name);
+  if(existing){ existing.quantity++; }
+  else{ cart.push({...dish, quantity:1}); }
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateMiniCart();
+  updateCartCount();
+}
+
+function updateCartCount(){
+  const count = cart.reduce((acc,item)=>acc+(item.quantity||1),0);
+  document.getElementById("cart-count").innerText=count;
+}
+
+function updateMiniCart(){
+  const container=document.getElementById("miniCartItems");
+  const totalElem=document.getElementById("miniCartTotal");
+  container.innerHTML="";
+  let total=0;
+  cart.forEach(item=>{
+    total+=item.price*item.quantity;
+    container.innerHTML+=`<div class="mini-cart-item">
+      <span>${item.name} x${item.quantity}</span>
+      <span>₹${item.price*item.quantity}</span>
+    </div>`;
+  });
+  totalElem.innerText=total;
+  const miniCart=document.getElementById("miniCart");
+  miniCart.classList.add("show");
+  setTimeout(()=>{miniCart.classList.remove("show");},3000);
+}
+
+function goToCart(){ window.location.href="cart.html"; }
+
+
+const filterBtns = document.querySelectorAll(".filter-btn");
+filterBtns.forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    filterBtns.forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    renderDishes(btn.getAttribute("data-category"));
+  });
+});
+
+
+renderDishes();
+updateMiniCart();
+updateCartCount();
+</script>
+
+</body>
+</html>
